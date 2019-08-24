@@ -4,7 +4,11 @@ __lua__
 --sample cave dweller
 --by romellem
 
+scene="menu"
+
 function _init()
+	cls()
+
 	game_over=false
 	make_cave()
 	make_player()
@@ -12,28 +16,38 @@ function _init()
 end
 
 function _update()
-	if (not game_over) then
-		update_cave()
-		move_player()
-		update_enemies()
-		check_hit()
+	if (scene == "menu") then
+		update_menu()
 	else
-		if (btnp(5)) _init() --restart
+		--update game state
+		if (not game_over) then
+			update_cave()
+			move_player()
+			update_enemies()
+			check_hit()
+		else
+			if (btnp(5)) _init() --restart
+		end
 	end
 end
 
 function _draw()
-	cls()
-	draw_cave()
-	draw_player()
-	draw_enemies()
-	
-	if (game_over) then
-		print("game over!", 44, 44, 7)
-		print("your score:"..player.score, 34, 54, 7)
-		print("press ❎ to play again", 18, 72, 12)
+	if (scene == "menu") then
+		draw_menu()
 	else
-		print("score:"..player.score, 2, 2, 7)
+		--start game
+		cls()
+		draw_cave()
+		draw_player()
+		draw_enemies()
+		
+		if (game_over) then
+			print("game over!", 44, 44, 7)
+			print("your score:"..player.score, 34, 54, 7)
+			print("press ❎ to play again", 18, 72, 12)
+		else
+			print("score:"..player.score, 2, 2, 7)
+		end
 	end
 end
 -->8
@@ -229,6 +243,17 @@ function box_hit(
 	end
 	
 	return hit
+end
+
+function update_menu()
+	if (btnp(❎)) then
+		scene="game"
+	end
+end
+
+function draw_menu()
+	print("menu", 44, 44, 7)
+	print("press ❎ to start", 38, 50, 7)
 end
 __gfx__
 0000000000aaaa0000aaaa0000888800002222200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
