@@ -90,12 +90,11 @@ function check_hit()
 	end
 	
 	--check if player is touching enemy
-	--we don't need to loop over all pixels of player or enemy,
-	--just use 8x8 box to check collision
+	--uses 6x6 box for enemy to give some collision wiggle room
 	for enem in all(enemies) do
 		if (box_hit(
 			player.x, player.y, 8, 8,
-			enem.x, enem.y, 6, 6)
+			enem.x+1, enem.y+1, 6, 6)
 		) then
 			die()
 		end
