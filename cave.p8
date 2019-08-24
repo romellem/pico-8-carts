@@ -7,6 +7,9 @@ function _init()
 	make_player()
 end
 
+--sample cave dweller
+--by romellem
+
 function _update()
 	if (not game_over) then
 		update_cave()
