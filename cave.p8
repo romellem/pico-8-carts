@@ -125,6 +125,8 @@ function update_cave()
 		local col={}
 		local up=flr(rnd(7)-3)
 		local dwn=flr(rnd(7)-3)
+		
+		--clamp our values
 		col.top = mid(3, cave[#cave].top+up, top)
 		col.btm = mid(btm, cave[#cave].btm+dwn, 124)
 		add(cave, col)
@@ -155,9 +157,15 @@ function init_enemies()
 end
 
 function make_enemy()
+	--get last cave column to determine y range for enemy
+	local e_top = cave[#cave].top
+	local e_btm = cave[#cave].btm
+
 	local enemy={}
 	enemy.x=127
-	enemy.y=flr(rnd(128))+1
+
+	--create y value between opening in cave
+	enemy.y=flr(rnd(e_btm-e_top+2)) + e_top-2
 	enemy.s=4
 	
 	enemy.score=100
