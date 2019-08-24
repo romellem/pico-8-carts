@@ -15,8 +15,8 @@ function _update()
 	if (not game_over) then
 		update_cave()
 		move_player()
-		check_hit()
 		update_enemies()
+		check_hit()
 	else
 		if (btnp(5)) _init() --restart
 	end
@@ -61,12 +61,12 @@ function draw_player()
 end
 
 function move_player()
-	gravity=0.15 --increase this value to increase gravity
+	gravity=0.12 --increase this value to increase gravity
 	player.dy += gravity
 	
 	--jump
 	if (btnp(2)) then
-		player.dy -= 5
+		player.dy -= 4
 		sfx(0)
 	end
 	
@@ -79,12 +79,29 @@ end
 
 function check_hit()
 	for i=player.x,player.x+7 do
+		--check if player is touching cave
 		if (cave[i+1].top > player.y
 			or cave[i+1].btm < player.y+7) then
-			game_over=true
-			sfx(1)
+			die()
 		end
 	end
+	
+	--check if player is touching enemy
+	--we don't need to loop over all pixels of player or enemy,
+	--just use 8x8 box to check collision
+	for enem in all(enemies) do
+		if (box_hit(
+			player.x, player.y, 8, 8,
+			enem.x, enem.y, 6, 6)
+		) then
+			die()
+		end
+	end
+end
+
+function die()
+	game_over=true
+	sfx(1)
 end
 -->8
 function make_cave()
@@ -147,19 +164,16 @@ function make_enemy()
 end
 
 function draw_enemies()
-
-	--if (#enemies > 0) then
-		for e in all(enemies) do
-			spr(e.s, e.x, e.y)
-			e.x -= 1
-			
-			-- (0 or 1) * 2 = (0 or 2) - 1 = (1 or -1)
-			local dy=flr(rnd(2))*2 - 1
-			if (rnd(1)<enemy_y_prob) then
-				e.y += dy
-			end
+	for e in all(enemies) do
+		spr(e.s, e.x, e.y)
+		e.x -= 1
+		
+		-- (0 or 1) * 2 = (0 or 2) - 1 = (1 or -1)
+		local dy=flr(rnd(2))*2 - 1
+		if (rnd(1)<enemy_y_prob) then
+			e.y += dy
 		end
-	--end
+	end
 end
 
 function gen_enemies()
@@ -185,6 +199,26 @@ end
 function update_enemies()
 	prune_enemies()
 	gen_enemies()
+end
+-->8
+function box_hit(
+	x1,y1,
+	w1,h1,
+	x2,y2,
+	w2,h2)
+	
+	local hit=false
+	
+	local xs=w1/2 + w2/2
+	local ys=h1/2 + h2/2
+	local xd=abs((x1 + (w1/2)) - (x2 + (w2/2)))
+	local yd=abs((y1 + (h1/2)) - (y2 + (h2/2)))
+	
+	if (xd<xs and yd<ys) then
+		hit=true
+	end
+	
+	return hit
 end
 __gfx__
 0000000000aaaa0000aaaa0000888800002222200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
