@@ -16,6 +16,11 @@ function _update()
 	else
 		ship.sp = 2
 	end
+	
+	if (btn(⬅️)) then ship.x-=1 end
+	if (btn(➡️)) then ship.x+=1 end
+	if (btn(⬆️)) then ship.y-=1 end
+	if (btn(⬇️)) then ship.y+=1 end
 end
 
 function _draw()
