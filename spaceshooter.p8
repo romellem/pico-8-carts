@@ -12,7 +12,8 @@ function _init()
 		x=60,
 		y=60,
 		h=3,
-		p=0
+		p=0,
+		box={x1=0, y1=0, x2=7, y2=7}
 	}
 	bullets = {}
 
@@ -24,13 +25,27 @@ function _init()
 			m_y=60-i*8,
 			x=-32,
 			y=-32,
-			r=12
+			r=12,
+			box={x1=0, y1=0, x2=7, y2=7}
 		})
 	end
 end
 
+-- returns position of box offset against its boundaries
+function abs_box(s)
+	local box = {}
+	box.x1 = s.box.x1 + s.x
+	box.y1 = s.box.y1 + s.y
+	box.x2 = s.box.x2 + s.x
+	box.y2 = s.box.y2 + s.y
+	
+	return box
+end
+
 function coll(a,b)
 	--@todo
+	box_a = abs_box(a)
+	box_b = abs_box(b)
 end
 
 function fire()
@@ -39,7 +54,8 @@ function fire()
 		x=ship.x,
 		y=ship.y,
 		dx=0,
-		dy=-3
+		dy=-3,
+		box={x1=2, y1=0, x2=5, y2=4}
 	}
 	add(bullets,b)
 end
