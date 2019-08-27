@@ -1,10 +1,19 @@
 pico-8 cartridge // http://www.pico-8.com
 version 18
 __lua__
-t=0
+--space shooter tutorial
+--by romellem
 
 function _init()
-	ship = {sp=1,x=60,y=60,h=3}
+	t=0
+
+	ship = {
+		sp=1,
+		x=60,
+		y=60,
+		h=3,
+		p=0
+	}
 	bullets = {}
 
 	enemies = {}
@@ -18,6 +27,10 @@ function _init()
 			r=12
 		})
 	end
+end
+
+function coll(a,b)
+	--@todo
 end
 
 function fire()
@@ -38,6 +51,10 @@ function _update()
 	for e in all(enemies) do
 		e.x = e.r*sin(t/50) + e.m_x
 		e.y = e.r*cos(t/50) + e.m_y
+		
+		if coll(ship,e) then
+			--@todo
+		end
 	end
 	
 	for b in all(bullets) do
@@ -46,6 +63,13 @@ function _update()
 		
 		if (b.x < 0 or b.x > 128 or b.y < 0 or b.y > 128) then
 			del(bullets,b)
+		end
+		
+		for e in all(enemies) do
+			if (coll(b,e)) then
+				del(enemies,e)
+				ship.p += 1
+			end
 		end
 	end
 	
@@ -64,7 +88,7 @@ end
 
 function _draw()
 	cls()
-	print(#bullets,9)
+	print(ship.p,9)
 	spr(ship.sp, ship.x, ship.y)
 	for b in all(bullets) do
 		spr(b.sp, b.x, b.y)
