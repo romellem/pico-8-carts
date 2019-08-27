@@ -11,8 +11,11 @@ function _init()
 	for i=1,10 do
 		add(enemies, {
 			sp=17,
-			x=i*16,
-			y=60-i*8
+			m_x=i*16,
+			m_y=60-i*8,
+			x=-32,
+			y=-32,
+			r=12
 		})
 	end
 end
@@ -31,6 +34,11 @@ end
 function _update()
 	--@todo this will eventually overflow at 32768
 	t+=1
+	
+	for e in all(enemies) do
+		e.x = e.r*sin(t/50) + e.m_x
+		e.y = e.r*cos(t/50) + e.m_y
+	end
 	
 	for b in all(bullets) do
 		b.x+=b.dx
