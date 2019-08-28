@@ -55,23 +55,10 @@ function draw_over()
 	print("game over", 50, 50, 4)
 end
 
-function fire()
-	local b = {
-		sp=3,
-		x=ship.x,
-		y=ship.y,
-		dx=0,
-		dy=-3,
-		box={x1=2, y1=0, x2=5, y2=4}
-	}
-	add(bullets,b)
-end
-
 function update_game()
-	--@todo this will eventually overflow at 32768
 	t+=1
 	
-	--init ship with immortality
+	--update ship immortality state
 	if ship.imm then
 		ship.t += 1
 		if ship.t > 30 then
@@ -240,6 +227,20 @@ function respawn()
 			box={x1=0, y1=0, x2=7, y2=7}
 		})
 	end
+end
+-->8
+--ship and bullets
+
+function fire()
+	local b = {
+		sp=3,
+		x=ship.x,
+		y=ship.y,
+		dx=0,
+		dy=-3,
+		box={x1=2, y1=0, x2=5, y2=4}
+	}
+	add(bullets,b)
 end
 __gfx__
 00000000008008000080080000099000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
