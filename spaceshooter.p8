@@ -33,19 +33,25 @@ function _init()
 		})
 	end
 	
-	for i=1,10 do
+	start()
+end
+
+function respawn()
+	local n = flr(rnd(9))+2
+	for i=1,n do
+		local d = -1
+		if rnd(1) < 0.5 then d = 1 end
 		add(enemies, {
 			sp=17,
 			m_x=i*16,
-			m_y=60-i*8,
+			m_y=-20-i*8,
+			d=d,
 			x=-32,
 			y=-32,
 			r=12,
 			box={x1=0, y1=0, x2=7, y2=7}
 		})
 	end
-	
-	start()
 end
 
 function start()
@@ -140,8 +146,13 @@ function update_game()
 		end
 	end
 	
+	if #enemies <= 0 then
+		respawn()
+	end
+	
 	for e in all(enemies) do
-		e.x = e.r*sin(t/50) + e.m_x
+		e.m_y += 1.3
+		e.x = e.r*sin(e.d*t/50) + e.m_x
 		e.y = e.r*cos(t/50) + e.m_y
 		
 		if coll(ship,e) and not ship.imm then
@@ -150,6 +161,10 @@ function update_game()
 			if ship.h <= 0 then
 				game_over()
 			end
+		end
+		
+		if e.y >= 150 then
+			del(enemies,e)
 		end
 	end
 	
