@@ -153,7 +153,7 @@ function update_game()
 	for e in all(enemies) do
 		e.m_y += 1.3
 		e.x = e.r*sin(e.d*t/50) + e.m_x
-		e.y = e.r*cos(t/50) + e.m_y
+		e.y = e.m_y --e.r*cos(t/50) + e.m_y
 		
 		if coll(ship,e) and not ship.imm then
 			ship.imm = true
