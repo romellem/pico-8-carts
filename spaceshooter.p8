@@ -53,11 +53,9 @@ function update_game()
 	end
 	
 	update_enemies_positions()
-	
 	update_bullets_positions()
 	
-	stagger_ship_animation()
-	
+	animate_ship()
 	move_ship()
 end
 
@@ -65,37 +63,12 @@ function draw_game()
 	cls()
 	print(ship.p,9)
 	
-	for st in all(stars) do
-		pset(st.x, st.y, 6)
-	end
-	
-	if not ship.imm or t%8 < 4 then
-		spr(ship.sp, ship.x, ship.y)
-	end
-	
-	for ex in all(explosions) do
-		circ(ex.x, ex.y, ex.t/3, 8+ex.t%3)
-		
-		--reset color after drawing
-		--(so our printed score in the upper corner stays white)
-		color(6)
-	end
-
-	for b in all(bullets) do
-		spr(b.sp, b.x, b.y)
-	end
-	
-	for e in all(enemies) do
-		spr(e.sp, e.x, e.y)
-	end
-	
-	for i=1,4 do
-		if i<=ship.h then
-			spr(33, 80+6*i, 3)
-		else
-			spr(34, 80+6*i, 3)
-		end
-	end
+	draw_stars()
+	draw_ship()
+	draw_explosions()
+	draw_bullets()
+	draw_enemies()
+	draw_ship_health()
 end
 -->8
 --utility functions
@@ -149,6 +122,12 @@ function update_star_positions()
 		end
 	end
 end
+
+function draw_stars()
+	for st in all(stars) do
+		pset(st.x, st.y, 6)
+	end
+end
 -->8
 --enemies and explosions
 
@@ -183,6 +162,18 @@ function respawn()
 	end
 end
 
+function draw_explosions()
+	for ex in all(explosions) do
+		circ(ex.x, ex.y, ex.t/3, 8+ex.t%3)
+		
+		--reset color after drawing
+		--(so our printed score in the upper corner stays white)
+		color(6)
+	end
+end
+
+--enemies
+
 function update_enemies_positions()
 	for e in all(enemies) do
 		e.m_y += 1.3
@@ -202,6 +193,12 @@ function update_enemies_positions()
 		if e.y >= 150 then
 			del(enemies,e)
 		end
+	end
+end
+
+function draw_enemies()
+	for e in all(enemies) do
+		spr(e.sp, e.x, e.y)
 	end
 end
 -->8
@@ -240,6 +237,12 @@ function update_bullets_positions()
 	end
 end
 
+function draw_bullets()
+	for b in all(bullets) do
+		spr(b.sp, b.x, b.y)
+	end
+end
+
 --ship
 
 function get_ship()
@@ -255,7 +258,7 @@ function get_ship()
 	}
 end
 
-function stagger_ship_animation()
+function animate_ship()
 	if (t%6 < 3) then
 		ship.sp = 1
 	else
@@ -283,6 +286,23 @@ function move_ship()
 	if (btn(⬆️)) then ship.y-=1 end
 	if (btn(⬇️)) then ship.y+=1 end
 	if (btnp(🅾️)) then fire() end
+end
+
+function draw_ship()
+	--when hit, ship "flashes" based on global `t` timer
+	if not ship.imm or t%8 < 4 then
+		spr(ship.sp, ship.x, ship.y)
+	end
+end
+
+function draw_ship_health()
+	for i=1,4 do
+		if i<=ship.h then
+			spr(33, 80+6*i, 3)
+		else
+			spr(34, 80+6*i, 3)
+		end
+	end
 end
 __gfx__
 00000000008008000080080000099000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
