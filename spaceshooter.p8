@@ -36,24 +36,6 @@ function _init()
 	start()
 end
 
-function respawn()
-	local n = flr(rnd(9))+2
-	for i=1,n do
-		local d = -1
-		if rnd(1) < 0.5 then d = 1 end
-		add(enemies, {
-			sp=17,
-			m_x=i*16,
-			m_y=-20-i*8,
-			d=d,
-			x=-32,
-			y=-32,
-			r=12,
-			box={x1=0, y1=0, x2=7, y2=7}
-		})
-	end
-end
-
 function start()
 	_update = update_game
 	_draw = draw_game
@@ -71,10 +53,6 @@ end
 function draw_over()
 	cls()
 	print("game over", 50, 50, 4)
-end
-
-function explode(x,y)
-	add(explosions, {x=x,y=y,t=0})
 end
 
 function fire()
@@ -164,6 +142,10 @@ function update_game()
 		ship.sp = 2
 	end
 	
+	--6 is timer for ship animation,
+	--8 is timer for hit flash
+	if t >= (6*8) then t=0 end
+	
 	if (btn(⬅️)) then ship.x-=1 end
 	if (btn(➡️)) then ship.x+=1 end
 	if (btn(⬆️)) then ship.y-=1 end
@@ -234,6 +216,30 @@ function coll(a,b)
 	end
 	
 	return true
+end
+-->8
+--enemies and explosions
+
+function explode(x,y)
+	add(explosions, {x=x,y=y,t=0})
+end
+
+function respawn()
+	local n = flr(rnd(9))+2
+	for i=1,n do
+		local d = -1
+		if rnd(1) < 0.5 then d = 1 end
+		add(enemies, {
+			sp=17,
+			m_x=i*16,
+			m_y=-20-i*8,
+			d=d,
+			x=-32,
+			y=-32,
+			r=12,
+			box={x1=0, y1=0, x2=7, y2=7}
+		})
+	end
 end
 __gfx__
 00000000008008000080080000099000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
