@@ -29,6 +29,27 @@ function _init()
 			box={x1=0, y1=0, x2=7, y2=7}
 		})
 	end
+	
+	start()
+end
+
+function start()
+	_update = update_game
+	_draw = draw_game
+end
+
+function game_over()
+	_update = update_over
+	_draw = draw_over
+end
+
+function update_over()
+
+end
+
+function draw_over()
+	cls()
+	print("game over", 50, 50, 4)
 end
 
 -- returns position of box offset against its boundaries
@@ -70,7 +91,7 @@ function fire()
 	add(bullets,b)
 end
 
-function _update()
+function update_game()
 	--@todo this will eventually overflow at 32768
 	t+=1
 	
@@ -112,7 +133,7 @@ function _update()
 	if (btnp(🅾️)) then fire() end
 end
 
-function _draw()
+function draw_game()
 	cls()
 	print(ship.p,9)
 	spr(ship.sp, ship.x, ship.y)
