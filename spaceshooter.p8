@@ -44,8 +44,18 @@ end
 
 function coll(a,b)
 	--@todo
-	box_a = abs_box(a)
-	box_b = abs_box(b)
+	local box_a = abs_box(a)
+	local box_b = abs_box(b)
+	
+	if box_a.x1 > box_b.x2 or
+	   box_a.y1 > box_b.y2 or
+	   box_b.x1 > box_a.x2 or
+	   box_b.y1 > box_a.y2 then
+	   
+	   return false
+	end
+	
+	return true
 end
 
 function fire()
