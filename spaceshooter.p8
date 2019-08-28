@@ -60,15 +60,7 @@ function update_game()
 	
 	update_ship_immortality()
 	
-	for st in all(stars) do
-		st.y += st.s
-		
-		--wrap stars back around
-		if (st.y >= 128) then
-			st.y = 0
-			st.x = rnd(128)
-		end
-	end
+	update_star_positions()
 	
 	for ex in all(explosions) do
 		ex.t += 1
@@ -196,6 +188,20 @@ function coll(a,b)
 	end
 	
 	return true
+end
+-->8
+--scene
+
+function update_star_positions()
+	for st in all(stars) do
+		st.y += st.s
+		
+		--wrap stars back around
+		if (st.y >= 128) then
+			st.y = 0
+			st.x = rnd(128)
+		end
+	end
 end
 -->8
 --enemies and explosions
