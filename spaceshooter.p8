@@ -7,31 +7,14 @@ __lua__
 function _init()
 	t=0
 
-	ship = {
-		sp=1,
-		x=60,
-		y=60,
-		h=4,
-		p=0,
-		t=0,
-		imm=false,
-		box={x1=0, y1=0, x2=7, y2=7}
-	}
+	ship = get_ship()
 	bullets = {}
 
 	enemies = {}
-	
 	explosions = {}
 	
 	stars = {}
-	
-	for i=1,60 do
-		add(stars, {
-			x=rnd(128),
-			y=rnd(128),
-			s=rnd(2)+1
-		})
-	end
+	create_stars()
 	
 	start()
 end
@@ -56,73 +39,26 @@ function draw_over()
 end
 
 function update_game()
+	--global timer for ship animation frame and immortality flash
 	t+=1
 	
 	update_ship_immortality()
 	
 	update_star_positions()
 	
-	for ex in all(explosions) do
-		ex.t += 1
-		if (ex.t >= 13) then
-			del(explosions, ex)
-		end
-	end
+	update_explosions_timer()
 	
 	if #enemies <= 0 then
 		respawn()
 	end
 	
-	for e in all(enemies) do
-		e.m_y += 1.3
-		e.x = e.r*sin(e.d*t/50) + e.m_x
-		e.y = e.m_y --e.r*cos(t/50) + e.m_y
-		
-		if coll(ship,e) and not ship.imm then
-			ship.imm = true
-			ship.h -= 1
-			if ship.h <= 0 then
-				game_over()
-			end
-		end
-		
-		if e.y >= 150 then
-			del(enemies,e)
-		end
-	end
+	update_enemies_positions()
 	
-	for b in all(bullets) do
-		b.x+=b.dx
-		b.y+=b.dy
-		
-		if (b.x < 0 or b.x > 128 or b.y < 0 or b.y > 128) then
-			del(bullets,b)
-		end
-		
-		for e in all(enemies) do
-			if (coll(b,e)) then
-				del(enemies,e)
-				ship.p += 1
-				explode(e.x,e.y)
-			end
-		end
-	end
+	update_bullets_positions()
 	
-	if (t%6 < 3) then
-		ship.sp = 1
-	else
-		ship.sp = 2
-	end
+	stagger_ship_animation()
 	
-	--6 is timer for ship animation,
-	--8 is timer for hit flash
-	if t >= (6*8) then t=0 end
-	
-	if (btn(⬅️)) then ship.x-=1 end
-	if (btn(➡️)) then ship.x+=1 end
-	if (btn(⬆️)) then ship.y-=1 end
-	if (btn(⬇️)) then ship.y+=1 end
-	if (btnp(🅾️)) then fire() end
+	move_ship()
 end
 
 function draw_game()
@@ -192,6 +128,16 @@ end
 -->8
 --scene
 
+function create_stars()
+	for i=1,60 do
+		add(stars, {
+			x=rnd(128),
+			y=rnd(128),
+			s=rnd(2)+1
+		})
+	end
+end
+
 function update_star_positions()
 	for st in all(stars) do
 		st.y += st.s
@@ -208,6 +154,15 @@ end
 
 function explode(x,y)
 	add(explosions, {x=x,y=y,t=0})
+end
+
+function update_explosions_timer()
+	for ex in all(explosions) do
+		ex.t += 1
+		if (ex.t >= 13) then
+			del(explosions, ex)
+		end
+	end
 end
 
 function respawn()
@@ -227,8 +182,32 @@ function respawn()
 		})
 	end
 end
+
+function update_enemies_positions()
+	for e in all(enemies) do
+		e.m_y += 1.3
+		e.x = e.r*sin(e.d*t/50) + e.m_x
+		e.y = e.m_y --e.r*cos(t/50) + e.m_y
+		
+		if coll(ship,e) and not ship.imm then
+			ship.imm = true
+			ship.h -= 1
+			
+			--@todo should game_over call be somewhere else?
+			if ship.h <= 0 then
+				game_over()
+			end
+		end
+		
+		if e.y >= 150 then
+			del(enemies,e)
+		end
+	end
+end
 -->8
 --ship and bullets
+
+--bullets
 
 function fire()
 	local b = {
@@ -242,6 +221,52 @@ function fire()
 	add(bullets,b)
 end
 
+function update_bullets_positions()
+	for b in all(bullets) do
+		b.x+=b.dx
+		b.y+=b.dy
+		
+		if (b.x < 0 or b.x > 128 or b.y < 0 or b.y > 128) then
+			del(bullets,b)
+		end
+		
+		for e in all(enemies) do
+			if (coll(b,e)) then
+				del(enemies,e)
+				ship.p += 1
+				explode(e.x,e.y)
+			end
+		end
+	end
+end
+
+--ship
+
+function get_ship()
+	return {
+		sp=1,
+		x=60,
+		y=60,
+		h=4,
+		p=0,
+		t=0,
+		imm=false,
+		box={x1=0, y1=0, x2=7, y2=7}
+	}
+end
+
+function stagger_ship_animation()
+	if (t%6 < 3) then
+		ship.sp = 1
+	else
+		ship.sp = 2
+	end
+	
+	--6 is timer for ship animation,
+	--8 is timer for hit flash
+	if t >= (6*8) then t=0 end
+end
+
 function update_ship_immortality()
 	if ship.imm then
 		ship.t += 1
@@ -250,6 +275,14 @@ function update_ship_immortality()
 			ship.t = 0
 		end
 	end
+end
+
+function move_ship()
+	if (btn(⬅️)) then ship.x-=1 end
+	if (btn(➡️)) then ship.x+=1 end
+	if (btn(⬆️)) then ship.y-=1 end
+	if (btn(⬇️)) then ship.y+=1 end
+	if (btnp(🅾️)) then fire() end
 end
 __gfx__
 00000000008008000080080000099000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
