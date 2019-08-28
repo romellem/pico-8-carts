@@ -58,14 +58,7 @@ end
 function update_game()
 	t+=1
 	
-	--update ship immortality state
-	if ship.imm then
-		ship.t += 1
-		if ship.t > 30 then
-			ship.imm = false
-			ship.t = 0
-		end
-	end
+	update_ship_immortality()
 	
 	for st in all(stars) do
 		st.y += st.s
@@ -179,7 +172,7 @@ end
 -->8
 --utility functions
 
--- returns position of box offset against its boundaries
+--returns position of box offset against its boundaries
 function abs_box(s)
 	local box = {}
 	box.x1 = s.box.x1 + s.x
@@ -241,6 +234,16 @@ function fire()
 		box={x1=2, y1=0, x2=5, y2=4}
 	}
 	add(bullets,b)
+end
+
+function update_ship_immortality()
+	if ship.imm then
+		ship.t += 1
+		if ship.t > 30 then
+			ship.imm = false
+			ship.t = 0
+		end
+	end
 end
 __gfx__
 00000000008008000080080000099000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
