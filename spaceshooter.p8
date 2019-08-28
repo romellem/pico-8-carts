@@ -23,6 +23,15 @@ function _init()
 	
 	explosions = {}
 	
+	stars = {}
+	
+	for i=1,60 do
+		add(stars, {
+			x=rnd(128),
+			y=rnd(128),
+			s=rnd(2)+1
+		})
+	end
 	
 	for i=1,10 do
 		add(enemies, {
@@ -114,6 +123,16 @@ function update_game()
 		end
 	end
 	
+	for st in all(stars) do
+		st.y += st.s
+		
+		--wrap stars back around
+		if (st.y >= 128) then
+			st.y = 0
+			st.x = rnd(128)
+		end
+	end
+	
 	for ex in all(explosions) do
 		ex.t += 1
 		if (ex.t >= 13) then
@@ -168,6 +187,10 @@ function draw_game()
 	cls()
 	print(ship.p,9)
 	
+	for st in all(stars) do
+		pset(st.x, st.y, 6)
+	end
+	
 	if not ship.imm or t%8 < 4 then
 		spr(ship.sp, ship.x, ship.y)
 	end
@@ -177,7 +200,7 @@ function draw_game()
 		
 		--reset color after drawing
 		--(so our printed score in the upper corner stays white)
-		color(7)
+		color(6)
 	end
 
 	for b in all(bullets) do
