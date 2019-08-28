@@ -174,6 +174,10 @@ function draw_game()
 	
 	for ex in all(explosions) do
 		circ(ex.x, ex.y, ex.t/3, 8+ex.t%3)
+		
+		--reset color after drawing
+		--(so our printed score in the upper corner stays white)
+		color(7)
 	end
 
 	for b in all(bullets) do
