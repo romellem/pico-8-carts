@@ -353,6 +353,10 @@ function move_ship()
 	if (btn(⬆️)) then ship.y-=1 end
 	if (btn(⬇️)) then ship.y+=1 end
 	if (btnp(🅾️)) then fire() end
+	
+	--prevent ship from leaving bounding box
+	ship.x=mid(0,ship.x,121)
+	ship.y=mid(60,ship.y,120)
 end
 
 function draw_ship()
