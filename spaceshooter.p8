@@ -238,7 +238,7 @@ end
 
 function update_enemies_positions()
 	for e in all(enemies) do
-		e.m_y += 1.3
+		e.m_y += 1 + rnd(1)
 		e.x = e.r*sin(e.d*t/50) + e.m_x
 		e.y = e.m_y --e.r*cos(t/50) + e.m_y
 		
