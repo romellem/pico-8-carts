@@ -16,7 +16,13 @@ function _init()
 	
 	stars = generate_stars()
 	
-	--start()
+	menu()
+end
+
+function menu()
+	_update = update_menu
+	
+	--don't need to refresh the screen (for now, moving stars in menu maybe?)
 	cls()
 	draw_menu()
 end
@@ -29,6 +35,12 @@ end
 function game_over()
 	_update = update_over
 	_draw = draw_over
+end
+
+function update_menu()
+	if btn(🅾️) then
+		start()
+	end
 end
 
 function update_over()
@@ -168,8 +180,8 @@ function draw_menu()
 	--reset area behind "start" text
 	rectfill(8,72, 42,89, 1)
 	palt()
-	print("press ❎", 10, 75, 5)
-	print("press ❎", 10, 74, 7)
+	print("press 🅾️", 10, 75, 5)
+	print("press 🅾️", 10, 74, 7)
 	print("to start", 10, 84, 5)
 	print("to start", 10, 83, 7)
 	
