@@ -288,7 +288,9 @@ function update_bullets_positions()
 			if (coll(b,e)) then
 				del(enemies,e)
 				ship.p += 1
-				explode(e.x,e.y)
+
+				--enemy is 7x7, so center explosion at 3x3
+				explode(e.x+3,e.y+4)
 			end
 		end
 	end
@@ -306,7 +308,7 @@ function get_ship()
 	return {
 		sp=1,
 		x=60,
-		y=60,
+		y=80,
 		h=4,
 		p=0,
 		t=0,
