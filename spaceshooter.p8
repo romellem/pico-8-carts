@@ -14,8 +14,7 @@ function _init()
 	enemies = {}
 	explosions = {}
 	
-	stars = {}
-	create_stars()
+	stars = generate_stars()
 	
 	--start()
 	cls()
@@ -104,14 +103,19 @@ end
 -->8
 --scene
 
-function create_stars()
-	for i=1,60 do
-		add(stars, {
+function generate_stars(num)
+	if not num then num = 60 end
+
+	local l_stars = {}
+	for i=1,num do
+		add(l_stars, {
 			x=rnd(128),
 			y=rnd(128),
 			s=rnd(2)+1
 		})
 	end
+	
+	return l_stars
 end
 
 function update_star_positions()
@@ -126,15 +130,22 @@ function update_star_positions()
 	end
 end
 
-function draw_stars()
-	for st in all(stars) do
+function draw_stars(arg_stars)
+ if not arg_stars then
+ 	arg_stars = stars
+ end
+
+	for st in all(arg_stars) do
 		pset(st.x, st.y, 6)
 	end
 end
 
 function draw_menu()
+	--stars
+	draw_stars(generate_stars(100))
+
 	--ship and bullet
-	spr(12, 48,90, 4,4)
+	spr(12, 48,95, 4,4)
 	spr(9,  60,76)
 	--enemies
 	spr(10, 36,46, 2,2)
@@ -142,7 +153,26 @@ function draw_menu()
 	spr(10, 76,46, 2,2)
 	
 	--logo
+	
+	--set red to be transparent (so black is drawn)
+	palt(8, true)
+	--draw a black box bg behind logo to remove stars
+	rectfill(33,0, 33+60,0+40, 0)
+	
+	--starting at pixel 50,11 in the sprite sheet,
+	--grab a 30x20 rectangle, and draw it
+	--at 33,0 on the screen, and stretch it
+	--to double the size at 60x40
 	sspr(50,11, 30,20, 33,0, 60,40)
+	
+	--reset area behind "start" text
+	rectfill(8,72, 42,89, 1)
+	palt()
+	print("press ❎", 10, 75, 5)
+	print("press ❎", 10, 74, 7)
+	print("to start", 10, 84, 5)
+	print("to start", 10, 83, 7)
+	
 end
 -->8
 --enemies and explosions
