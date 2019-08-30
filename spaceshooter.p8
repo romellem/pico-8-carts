@@ -6,6 +6,12 @@ __lua__
 --@see https://ztiromoritz.github.io/pico-8-shooter/
 
 function _init()
+	set_init()
+	
+	menu()
+end
+
+function set_init()
 	t=0
 
 	ship = get_ship()
@@ -18,8 +24,6 @@ function _init()
 	respawn()
 	
 	stars = generate_stars()
-	
-	menu()
 end
 
 function menu()
@@ -48,12 +52,18 @@ function update_menu()
 end
 
 function update_over()
-
+	update_star_positions()
+	if btn(🅾️) then
+		set_init()
+		start()
+	end
 end
 
 function draw_over()
 	cls()
+	draw_stars()
 	print("game over", 50, 50, 4)
+	print("press 🅾️ to restart", 30, 60, 4)
 end
 
 function update_game()
@@ -67,7 +77,7 @@ function update_game()
 	update_explosions_timer()
 	
 	if #enemies <= 0 then
-		respawn(true)
+		respawn()
 	end
 	
 	update_enemies_positions()
@@ -209,15 +219,25 @@ function update_explosions_timer()
 	end
 end
 
-function respawn(sound)
-	local n = flr(rnd(9))+2
+function respawn()
+	local n = flr(rnd(3))+6
+	
+	local y_init
+	local y_scalar
+	if rnd(1) < 0.5 then
+		y_init = -100
+		y_scalar = 1
+	else
+		y_init = -20
+		y_scalar = -1
+	end
 	for i=1,n do
 		local d = -1
 		if rnd(1) < 0.5 then d = 1 end
 		add(enemies, {
 			sp=17,
 			m_x=i*16,
-			m_y=-20-i*8,
+			m_y=y_init + (y_scalar * (i*8)),
 			d=d,
 			x=-32,
 			y=-32,
@@ -225,9 +245,6 @@ function respawn(sound)
 			box={x1=0, y1=0, x2=7, y2=7}
 		})
 	end
-
-	--play the respawn sound
-	if sound then sfx(3) end
 end
 
 function draw_explosions()
