@@ -243,7 +243,7 @@ function update_enemies_positions()
 		e.y = e.m_y --e.r*cos(t/50) + e.m_y
 		
 		if coll(ship,e) and not ship.imm then
-			ship_hit()
+			ship_hit(e)
 		end
 		
 		if e.y >= 150 then
@@ -339,10 +339,15 @@ function update_ship_immortality()
 	end
 end
 
-function ship_hit()
+function ship_hit(e)
 	ship.imm = true
 	ship.h -= 1
 	sfx(2)
+	
+	if e then
+		explode(e.x+3, e.y+4)
+		del(enemies,e)
+	end
 	
 	if ship.h <= 0 then
 		game_over()
