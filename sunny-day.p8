@@ -1,9 +1,26 @@
 pico-8 cartridge // http://www.pico-8.com
 version 29
 __lua__
+x=50
+y=50
+
+function _update()
+	if btn(⬆️) then
+	  y-=1
+	elseif btn(⬇️) then
+	  y+=1
+	end
+	
+	if btn(⬅️) then
+	  x-=1
+	elseif btn(➡️) then
+	  x+=1
+	end
+end
+
 function _draw()
   cls()
-  spr(1, 50, 50)
+  spr(1, x, y)
 end
 __gfx__
 00000000000040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
