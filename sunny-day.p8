@@ -1,33 +1,49 @@
 pico-8 cartridge // http://www.pico-8.com
 version 29
 __lua__
+--variables
 
-x=50
-y=50
-dx=0
-dy=0
-acc=0.2 --acceleration
+function _init()
+	player={
+		x=50,
+		y=50,
+		dx=0,
+		dy=0,
+	}
+	
+	acc=0.2 --acceleration
+end
+
+
+-->8
+--update and draw
 
 function _update()
-	if btn(⬆️) then
-	  dy-=acc
-	elseif btn(⬇️) then
-	  dy+=acc
-	end
-	
-	if btn(⬅️) then
-	  dx-=acc
-	elseif btn(➡️) then
-	  dx+=acc
-	end
-	
-	x+=dx
-	y+=dy
+	player_update()
 end
 
 function _draw()
-  cls()
-  spr(1, x, y)
+	cls()
+	spr(1, player.x, player.y)
+end
+-->8
+--player
+
+function player_update()
+	if btn(⬆️) then
+		player.dy-=acc
+	elseif btn(⬇️) then
+		player.dy+=acc
+	end
+	
+	if btn(⬅️) then
+		player.dx-=acc
+	elseif btn(➡️) then
+		player.dx+=acc
+	end
+	
+	player.x+=player.dx
+	player.y+=player.dy
 end
 __gfx__
 00000000000040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
