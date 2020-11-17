@@ -6,12 +6,15 @@ __lua__
 function _init()
 	player={
 		x=100,
-		y=10,
+		y=112,
 		dx=0,
 		dy=0,
+		jump_speed=10,
+		falling=false,
 	}
 	
-	gravity=0.2
+	max_y=112
+	gravity=0.6
 end
 
 
@@ -31,10 +34,25 @@ end
 --player
 
 function player_update()
-	player.dy+=gravity
+	if 
+		btn(⬆️) and
+		not player.falling
+	then
+	 player.dy = -1 * player.jump_speed
+		player.falling = true
+	end
+	if player.falling then
+		player.dy += gravity
+	end
 
-	player.x+=player.dx
-	player.y+=player.dy
+	player.x += player.dx
+	player.y += player.dy
+	
+	--limit player to map
+ if player.y > max_y then
+ 	player.y = max_y
+ 	player.falling = false
+ end
 end
 __gfx__
 00000000000040005555555555555555555555550000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
