@@ -1,21 +1,28 @@
 pico-8 cartridge // http://www.pico-8.com
 version 29
 __lua__
+
 x=50
 y=50
+dx=0
+dy=0
+acc=0.2 --acceleration
 
 function _update()
 	if btn(⬆️) then
-	  y-=1
+	  dy-=acc
 	elseif btn(⬇️) then
-	  y+=1
+	  dy+=acc
 	end
 	
 	if btn(⬅️) then
-	  x-=1
+	  dx-=acc
 	elseif btn(➡️) then
-	  x+=1
+	  dx+=acc
 	end
+	
+	x+=dx
+	y+=dy
 end
 
 function _draw()
